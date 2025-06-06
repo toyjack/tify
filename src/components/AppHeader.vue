@@ -195,11 +195,26 @@ export default {
 				newPages = [0, 1];
 			} else if (pages[0] % 2 > 0) {
 				// An odd page was selected, add the preceding page
-				newPages = [pages[0] - 1, pages[0]];
+				if (this.$store.viewingDirection === 'right-to-left') {
+					// In RTL mode, the first page is the right one
+					newPages = [pages[0], pages[0] - 1];
+				} else {
+					// In LTR mode, the first page is the left one
+					newPages = [pages[0] - 1, pages[0]];
+				}
 			} else {
 				// An even page was selected, add the following page or 0 if it is the last one
+				// If the following page is greater than the page count, set it to 0
 				const followingPage = pages[0] < this.$store.pageCount ? pages[0] + 1 : 0;
-				newPages = [pages[0], followingPage];
+				if (this.$store.viewingDirection === 'right-to-left') {
+					// In RTL mode, the first page is the right one
+					newPages = [followingPage, pages[0]];
+				} else {
+					// In LTR mode, the first page is the left one
+
+					newPages = [pages[0], followingPage];
+				}
+				console.log('newPages', newPages);
 			}
 
 			this.$store.updateOptions({ pages: newPages });
